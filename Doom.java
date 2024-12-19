@@ -4,23 +4,20 @@ import java.util.Date;
 public class Doom {
 
     public static void main(String[] args) {
-        int numberOfCommits = 100;  
-
         try {
             File folder = new File("gen");
             if (!folder.exists()) {
                 folder.mkdir();
             }
 
-            for (int i = 0; i < numberOfCommits; i++) {
-                File file = new File("gen/README.yml");
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
-                    writer.write("Generated at: " + new Date().toString() + " - Time’s up. The abyss consumes all. Commit #" + (i+1) + "\n");
-                    System.out.println("The file has been forged in the darkest depths of GitHell: " + file.getAbsolutePath());
-                }
-
-                logToFile("git-commit-log.txt", "Commit made at: " + new Date().toString() + " - The end draws closer. Commit #" + (i+1));
+            File file = new File("gen/README.yml");
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                writer.write("Generated at: " + new Date().toString() + " - Time’s up. The abyss consumes all.");
+                System.out.println("The file has been forged in the darkest depths of GitHell: " + file.getAbsolutePath());
             }
+
+            // Log the commit action
+            logToFile("git-commit-log.txt", "Commit made at: " + new Date().toString() + " - The end draws closer.");
 
         } catch (Exception e) {
             System.err.println("An error occurred... but you can't escape GitHell: " + e.getMessage());
