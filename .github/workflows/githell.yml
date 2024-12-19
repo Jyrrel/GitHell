@@ -2,7 +2,7 @@ name: GitHell
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '*/5 * * * *'  
   workflow_dispatch:
 
 permissions:
@@ -21,7 +21,7 @@ jobs:
         with:
           java-version: 11.0.10
 
-      - name: Summon the Doom
+      - name: Compile and Run Doom.java
         run: |
           javac Doom.java
           java Doom
@@ -45,7 +45,7 @@ jobs:
           git config user.name "0x3EF8"
           git config user.email "0x3ef8@gmail.com"
           git add abyss/README.yml
-          git commit -S -m "💀 Auto-Commit from the Abyss: $(date) - The code loops forever in the void, feeding on your code."
+          git commit -S -m "💀 Auto-Commit from the Abyss: $(date) - The code loops forever."
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
