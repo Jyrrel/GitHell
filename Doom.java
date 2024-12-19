@@ -16,7 +16,6 @@ public class Doom {
                 System.out.println("The file has been forged in the darkest depths of GitHell: " + file.getAbsolutePath());
             }
 
-            // Log the commit action
             logToFile("git-commit-log.txt", "Commit made at: " + new Date().toString() + " - The end draws closer.");
 
         } catch (Exception e) {
@@ -36,3 +35,6 @@ public class Doom {
         }
     }
 }
+
+
+// Experimental 💀
