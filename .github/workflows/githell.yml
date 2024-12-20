@@ -53,6 +53,19 @@ jobs:
           execution_count=$(grep -oP '(?<=Execution Count: )\d+' abyss/execution_data.txt | tail -1)
           execution_count=$((execution_count + 1))
           echo "execution_count=$execution_count" >> $GITHUB_ENV
+          echo "Execution Count: $execution_count" > abyss/execution_data.txt
+
+      - name: Track Total Commits
+        id: total_commits
+        run: |
+          if [ -f abyss/total_commits.txt ]; then
+            total_commit_count=$(cat abyss/total_commits.txt)
+            total_commit_count=$((total_commit_count + commit_count))
+          else
+            total_commit_count=$commit_count
+          fi
+          echo "total_commit_count=$total_commit_count" >> $GITHUB_ENV
+          echo $total_commit_count > abyss/total_commits.txt
 
       - name: Track Daily Commits
         id: daily_commits
@@ -78,6 +91,7 @@ jobs:
           current_time=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           count=0
           while [ $count -lt 100 ]; do
+            # Generate unique content to ensure a new commit
             echo "  ________.__  __     ___ ___         .__  .__   " > abyss/README.yml
             echo " /  _____/|__|/  |_  /   |   \   ____ |  | |  |  " >> abyss/README.yml
             echo "/   \  ___|  \   __\/    ~    \_/ __ \|  | |  |  " >> abyss/README.yml
@@ -95,16 +109,16 @@ jobs:
             echo "Last Execution Time: $current_time" >> abyss/README.yml
             echo "----------------------------------------------------" >> abyss/README.yml
             echo "Total commits today: ${{ env.daily_commit_count }}" >> abyss/README.yml
-            echo "Execution Count: ${{ env.execution_count }}" > abyss/execution_data.txt
-            echo "Last Execution Time: $current_time" >> abyss/execution_data.txt
-            git add abyss/README.yml abyss/execution_data.txt abyss/daily_commits.txt
+            echo "Total commits so far: ${{ env.total_commit_count }}" >> abyss/README.yml
+            git add abyss/README.yml abyss/execution_data.txt abyss/daily_commits.txt abyss/total_commits.txt
             git commit -S -m "Auto-Commit: $(date -u +"%Y-%m-%d %H:%M:%S") UTC
             Changes: Updated README with new commit details.
             Total commits: $total_commits
             Execution Count: ${{ env.execution_count }}
             Last Execution Time: $current_time
             Commit ID: $commit_id
-            Total commits today: ${{ env.daily_commit_count }}"
+            Total commits today: ${{ env.daily_commit_count }}
+            Total commits so far: ${{ env.total_commit_count }}"
             count=$((count+1))
           done
           git push
