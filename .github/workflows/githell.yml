@@ -24,6 +24,12 @@ jobs:
       - name: Create Abyss Directory
         run: mkdir -p abyss
 
+      - name: Initialize Execution Data
+        run: |
+          if [ ! -f abyss/execution_data.txt ]; then
+            echo "Execution Count: 0" > abyss/execution_data.txt
+          fi
+
       - name: Configure GPG Key
         uses: crazy-max/ghaction-import-gpg@v5
         with:
@@ -44,12 +50,8 @@ jobs:
       - name: Track Execution
         id: execution_data
         run: |
-          if [ -f abyss/execution_data.txt ]; then
-            execution_count=$(grep -oP '(?<=Execution Count: )\d+' abyss/execution_data.txt | tail -1)
-            execution_count=$((execution_count + 1))
-          else
-            execution_count=1
-          fi
+          execution_count=$(grep -oP '(?<=Execution Count: )\d+' abyss/execution_data.txt | tail -1)
+          execution_count=$((execution_count + 1))
           echo "execution_count=$execution_count" >> $GITHUB_ENV
 
       - name: Track Daily Commits
@@ -93,6 +95,8 @@ jobs:
             echo "Last Execution Time: $current_time" >> abyss/README.yml
             echo "----------------------------------------------------" >> abyss/README.yml
             echo "Total commits today: ${{ env.daily_commit_count }}" >> abyss/README.yml
+            echo "Execution Count: ${{ env.execution_count }}" > abyss/execution_data.txt
+            echo "Last Execution Time: $current_time" >> abyss/execution_data.txt
             git add abyss/README.yml abyss/execution_data.txt abyss/daily_commits.txt
             git commit -S -m "Auto-Commit: $(date -u +"%Y-%m-%d %H:%M:%S") UTC
             Changes: Updated README with new commit details.
