@@ -9,23 +9,23 @@ permissions:
   contents: write
 
 jobs:
-  update:
-    runs-on: ubuntu-24.04
+  abyss_commits:
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-      - name: Set up Java
-        uses: actions/setup-java@v1
+      - name: Setup Java Environment
+        uses: actions/setup-java@v3
         with:
           java-version: 11.0.10
 
-      - name: Abyss
-        run: |
-          mkdir -p abyss
+      - name: Prepare Abyss Directory
+        run: mkdir -p abyss
 
-      - name: GPG Key
-        uses: crazy-max/ghaction-import-gpg@v5
+      - name: Import GPG Key
+        uses: crazy-max/ghaction-import-gpg@v6
         with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.GPG_PASSPHRASE }}
@@ -33,27 +33,34 @@ jobs:
           git_user_signingkey: true
           git_commit_gpgsign: true
 
-      - name: Commit and Push 100 Changes
+      - name: Commit and Push Changes
         run: |
-          git config user.name "0x3EF8"
-          git config user.email "0x3ef8@gmail.com"
-          count=0
-          while [ $count -lt 100 ]; do
-            # Dynamically change the content to ensure a new commit
-            echo "  ________.__  __     ___ ___         .__  .__   " > abyss/README.yml
-            echo " /  _____/|__|/  |_  /   |   \   ____ |  | |  |  " >> abyss/README.yml
-            echo "/   \  ___|  \   __\/    ~    \_/ __ \|  | |  |  " >> abyss/README.yml
-            echo "\    \_\  \  ||  |  \    Y    /\  ___/|  |_|  |__" >> abyss/README.yml
-            echo " \______  /__||__|   \___|_  /  \___  >____/____/ " >> abyss/README.yml
-            echo "        \/                 \/       \/            " >> abyss/README.yml
-            echo "----------------------------------------------------" >> abyss/README.yml
-            echo "If you think you’ve won, think again. HAHAHAHA!" >> abyss/README.yml
-            echo "----------------------------------------------------" >> abyss/README.yml
-            echo "Commit Number: $count" >> abyss/README.yml  # Adding dynamic content
+          git config --global user.name "0x3EF8"
+          git config --global user.email "0x3ef8@gmail.com"
+
+          for i in $(seq 1 100); do
+            timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+            commit_id=$(cat /proc/sys/kernel/random/uuid)
+
+            cat <<EOF > abyss/README.yml
+  ________.__  __     ___ ___         .__  .__   
+ /  _____/|__|/  |_  /   |   \   ____ |  | |  |  
+/   \  ___|  \   __\/    ~    \_/ __ \|  | |  |  
+\    \_\  \  ||  |  \    Y    /\  ___/|  |_|  |__
+ \______  /__||__|   \___|_  /  \___  >____/____/ 
+        \/                 \/       \/            
+
+----------------------------------------------------
+Commit ID: $commit_id
+Timestamp: $timestamp
+Message: If you think you’ve won, think again. HAHAHAHA!
+----------------------------------------------------
+EOF
+
             git add abyss/README.yml
             git commit -S -m "If your strategy’s dirty, mine’s worse. 😈"
-            count=$((count+1))
           done
+
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
