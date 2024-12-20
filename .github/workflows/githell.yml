@@ -2,7 +2,7 @@ name: GitHell
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -13,16 +13,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Setup Java Environment
+      - name: Set Up Java Environment
         uses: actions/setup-java@v3
         with:
-          java-version: 11.0.10
+          java-version: 11
 
       - name: Prepare Abyss Directory
         run: mkdir -p abyss
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "0x3EF8"
+          git config --global user.email "0x3ef8@gmail.com"
 
       - name: Import GPG Key
         uses: crazy-max/ghaction-import-gpg@v6
@@ -33,32 +38,26 @@ jobs:
           git_user_signingkey: true
           git_commit_gpgsign: true
 
-      - name: Commit and Push Changes
+      - name: Generate and Commit 100 Unique Changes
         run: |
-          git config --global user.name "0x3EF8"
-          git config --global user.email "0x3ef8@gmail.com"
-
           for i in $(seq 1 100); do
             timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
             commit_id=$(cat /proc/sys/kernel/random/uuid)
 
-            cat <<EOF > abyss/README.yml
-  ________.__  __     ___ ___         .__  .__   
- /  _____/|__|/  |_  /   |   \   ____ |  | |  |  
-/   \  ___|  \   __\/    ~    \_/ __ \|  | |  |  
-\    \_\  \  ||  |  \    Y    /\  ___/|  |_|  |__
- \______  /__||__|   \___|_  /  \___  >____/____/ 
-        \/                 \/       \/            
-
-----------------------------------------------------
-Commit ID: $commit_id
-Timestamp: $timestamp
-Message: If you think you’ve won, think again. HAHAHAHA!
-----------------------------------------------------
-EOF
+            echo "  ________.__  __     ___ ___         .__  .__   " > abyss/README.yml
+            echo " /  _____/|__|/  |_  /   |   \   ____ |  | |  |  " >> abyss/README.yml
+            echo "/   \  ___|  \   __\/    ~    \_/ __ \|  | |  |  " >> abyss/README.yml
+            echo "\    \_\  \  ||  |  \    Y    /\  ___/|  |_|  |__" >> abyss/README.yml
+            echo " \______  /__||__|   \___|_  /  \___  >____/____/ " >> abyss/README.yml
+            echo "        \/                 \/       \/            " >> abyss/README.yml
+            echo "----------------------------------------------------" >> abyss/README.yml
+            echo "Commit ID: $commit_id" >> abyss/README.yml
+            echo "Timestamp: $timestamp" >> abyss/README.yml
+            echo "Message: If you think you’ve won, think again. HAHAHAHA!" >> abyss/README.yml
+            echo "----------------------------------------------------" >> abyss/README.yml
 
             git add abyss/README.yml
-            git commit -S -m "If your strategy’s dirty, mine’s worse. 😈"
+            git commit -S -m "🔥 Strategic Excellence: If your strategy’s dirty, mine’s worse. 😈"
           done
 
           git push
