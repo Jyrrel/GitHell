@@ -33,7 +33,13 @@ jobs:
           git_user_signingkey: true
           git_commit_gpgsign: true
 
-      - name: Commit and Push 100 Changes
+      - name: Set up EvilGit Remote
+        run: |
+          # Add EvilGit repository as remote
+          git remote add evilgit https://github.com/0x3EF8/EvilGit.git
+          git fetch evilgit
+
+      - name: Commit and Push 100 Changes to EvilGit
         run: |
           git config user.name "0x3EF8"
           git config user.email "0x3ef8@gmail.com"
@@ -59,6 +65,6 @@ jobs:
             git commit -S -m "If your strategy’s dirty, mine’s worse. 😈"
             count=$((count+1))
           done
-          git push
+          git push evilgit main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
