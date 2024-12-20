@@ -2,7 +2,7 @@ name: GitHell
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  
+    - cron: '*/5 * * * *'  # Runs every 5 minutes
   workflow_dispatch:
 
 permissions:
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v2  
+      - uses: actions/checkout@v2  # Checkout the code
 
       - name: Set up SSH
         run: |
@@ -21,6 +21,10 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa  # Use the secret SSH private key
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan github.com >> ~/.ssh/known_hosts  # Add GitHub to known hosts
+
+      - name: Debug SSH connection
+        run: |
+          ssh -vT git@github.com  # Debug SSH connection to GitHub
 
       - name: Abyss
         run: |
@@ -70,4 +74,4 @@ jobs:
           git push evilgit main  # Push changes to EvilGit using SSH
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}  
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}  # Use the secret SSH private key
