@@ -2,7 +2,7 @@ name: GitHell
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -16,13 +16,13 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Set up Java
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
-          java-version: 11.0.10
+          distribution: 'temurin'
+          java-version: '11'
 
       - name: Abyss
-        run: |
-          mkdir -p abyss
+        run: mkdir -p abyss
 
       - name: GPG Key
         uses: crazy-max/ghaction-import-gpg@v5
@@ -53,7 +53,7 @@ jobs:
             timestamp=$(date --utc +%Y-%m-%dT%H:%M:%SZ)
             echo "Commit ID: $commit_id" >> abyss/README.yml
             echo "Timestamp: $timestamp" >> abyss/README.yml
-            echo "Message: If you think you’ve won, think again. HAHAHAHA!" >> abyss/README.yml
+            echo "Commit: $count" >> abyss/README.yml
             echo "----------------------------------------------------" >> abyss/README.yml
             git add abyss/README.yml
             git commit -S -m "If your strategy’s dirty, mine’s worse. 😈"
