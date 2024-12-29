@@ -56,6 +56,13 @@ Fork. Clone. Study. Or just sit back and watch the chaos unfold. GitHell isn’t
 
 ---
 
+## 🛡️ **Acknowledgment**  
+
+This README was generated with assistance from an AI. The content and structure were tailored to align with GitHell’s tone and purpose.  
+
+---  
+
 ## 🛡️ **License**  
 
 No licenses, no rules, no mercy. Use responsibly—or don’t.  
+
