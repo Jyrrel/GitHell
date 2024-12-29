@@ -61,13 +61,13 @@ jobs:
           count=0
           while [ $count -lt $commit_count ]; do
             echo "  ________.__  __     ___ ___         .__  .__   " > abyss/README.yml
-            echo " /  _____/|__|/  |_  /   |   \   ____ |  | |  |  " >> abyss/README.yml
-            echo "/   \  ___|  \   __\/    ~    \_/ __ \|  | |  |  " >> abyss/README.yml
-            echo "\    \_\  \  ||  |  \    Y    /\  ___/|  |_|  |__" >> abyss/README.yml
-            echo " \______  /__||__|   \___|_  /  \___  >____/____/ " >> abyss/README.yml
-            echo "        \/                 \/       \/            " >> abyss/README.yml
+            echo " /  _____/|__|/  |_  /   |   \\   ____ |  | |  |  " >> abyss/README.yml
+            echo "/   \\  ___|  \\   __\\/    ~    \\_/ __ \\|  | |  |  " >> abyss/README.yml
+            echo "\\    \\_\\  \\  ||  |  \\    Y    /\\  ___/|  |_|  |__" >> abyss/README.yml
+            echo " \\______  /__||__|   \\___|_  /  \\___  >____/____/ " >> abyss/README.yml
+            echo "        \\/                 \\/       \\/            " >> abyss/README.yml
             echo "----------------------------------------------------" >> abyss/README.yml
-            echo "If you think you’ve won, think again. HAHAHAHA!" >> abyss/README.yml
+            echo "The abyss grows deeper with each commit." >> abyss/README.yml
             echo "----------------------------------------------------" >> abyss/README.yml
             commit_id=$(cat /proc/sys/kernel/random/uuid)
             total_commits=$(git rev-list --count HEAD)
@@ -77,7 +77,7 @@ jobs:
             echo "Last Execution Time: $current_time" >> abyss/README.yml
             echo "----------------------------------------------------" >> abyss/README.yml
             git add abyss/README.yml
-            git commit -S -m "If your strategy’s dirty, mine’s worse. 😈 (Total commits: $total_commits, Executions: ${{ env.execution_count }}, Last run: $current_time)"
+            git commit -S -m "Think you’re clever? Think again. 😈 (Total commits: $total_commits, Executions: ${{ env.execution_count }}, Last run: $current_time)"
             count=$((count+1))
           done
           git push
