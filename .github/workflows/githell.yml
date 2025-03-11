@@ -13,15 +13,18 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+        with:
+          ref: commits
+          fetch-depth: 1
 
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '11'
 
-      - name: Abyss
+      - name: Create Abyss Directory
         run: mkdir -p abyss
 
       - name: GPG Key
@@ -33,7 +36,7 @@ jobs:
           git_user_signingkey: true
           git_commit_gpgsign: true
 
-      - name: Fetch commit count
+      - name: Fetch Commit Count
         id: commit_count
         run: |
           current_time=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
@@ -41,7 +44,7 @@ jobs:
           commit_count=$(git rev-list --count --since="$past_time" --until="$current_time" HEAD)
           echo "commit_count=$commit_count" >> $GITHUB_ENV
 
-      - name: Track execution
+      - name: Track Execution
         id: execution_data
         run: |
           if [ -f abyss/README.yml ]; then
@@ -82,7 +85,7 @@ jobs:
             git commit -S -m "Think you’re clever? Think again. 😈 (Total commits: $total_commits, Executions: ${{ env.execution_count }}, Last run: $current_time)"
             count=$((count+1))
           done
-          git pull --rebase origin main || true
+          git pull --rebase origin commits || true
           attempt=0
           max_attempts=3
           until git push; do
@@ -91,9 +94,8 @@ jobs:
               echo "Failed to push after $attempt attempts"
               exit 1
             fi
-            echo "Git push failed, retrying after 10 seconds..."
             sleep 10
-            git pull --rebase origin main || true
+            git pull --rebase origin commits || true
           done
         env:
           API_GITHUB_TOKEN: ${{ secrets.API_GITHUB_TOKEN }}
