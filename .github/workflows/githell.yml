@@ -54,20 +54,20 @@ jobs:
 
       - name: Commit and Push Changes
         run: |
+          set -e
           git config user.name "0x3EF8"
           git config user.email "0x3ef8@gmail.com"
           current_time=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          # Set commit_count to roughly achieve ~500,000 commits per day (288 runs/day)
-          commit_count=$((1700 + RANDOM % 100))
+          commit_count=$((1736 + RANDOM % 6))
           echo "Running with commit_count: $commit_count"
           count=0
           while [ $count -lt $commit_count ]; do
             echo "  ________.__  __     ___ ___         .__  .__   " > abyss/README.yml
-            echo " /  _____/|__|/  |_  /   |   \\   ____ |  | |  |  " >> abyss/README.yml
-            echo "/   \\  ___|  \\   __\\/    ~    \\_/ __ \\|  | |  |  " >> abyss/README.yml
-            echo "\\    \\_\\  \\  ||  |  \\    Y    /\\  ___/|  |_|  |__" >> abyss/README.yml
-            echo " \\______  /__||__|   \\___|_  /  \\___  >____/____/ " >> abyss/README.yml
-            echo "        \\/                 \\/       \\/            " >> abyss/README.yml
+            echo " /  _____/|__|/  |_  /   |   \   ____ |  | |  |  " >> abyss/README.yml
+            echo "/   \  ___|  \   __\/    ~    \_/ __ \|  | |  |  " >> abyss/README.yml
+            echo "\    \_\  \  ||  |  \    Y    /\  ___/|  |_|  |__" >> abyss/README.yml
+            echo " \______  /__||__|   \___|_  /  \___  >____/____/ " >> abyss/README.yml
+            echo "        \/                 \/       \/            " >> abyss/README.yml
             echo "----------------------------------------------------" >> abyss/README.yml
             echo "The abyss grows deeper with each commit." >> abyss/README.yml
             echo "----------------------------------------------------" >> abyss/README.yml
@@ -82,6 +82,18 @@ jobs:
             git commit -S -m "Think you’re clever? Think again. 😈 (Total commits: $total_commits, Executions: ${{ env.execution_count }}, Last run: $current_time)"
             count=$((count+1))
           done
-          git push
+          git pull --rebase origin main || true
+          attempt=0
+          max_attempts=3
+          until git push; do
+            attempt=$((attempt+1))
+            if [ $attempt -ge $max_attempts ]; then
+              echo "Failed to push after $attempt attempts"
+              exit 1
+            fi
+            echo "Git push failed, retrying after 10 seconds..."
+            sleep 10
+            git pull --rebase origin main || true
+          done
         env:
           API_GITHUB_TOKEN: ${{ secrets.API_GITHUB_TOKEN }}
