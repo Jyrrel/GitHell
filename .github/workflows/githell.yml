@@ -1,8 +1,8 @@
-name: GitHell Ultra
+name: GitHell
 
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -37,7 +37,7 @@ jobs:
         id: commit_count
         run: |
           current_time=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          past_time=$(date -u -d "-15 minutes" +"%Y-%m-%dT%H:%M:%SZ")
+          past_time=$(date -u -d "-5 minutes" +"%Y-%m-%dT%H:%M:%SZ")
           commit_count=$(git rev-list --count --since="$past_time" --until="$current_time" HEAD)
           echo "commit_count=$commit_count" >> $GITHUB_ENV
 
@@ -57,8 +57,7 @@ jobs:
           git config user.name "0x3EF8"
           git config user.email "0x3ef8@gmail.com"
           current_time=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          # Upgraded commit loop: 20,000 commits per run (over 10× the original)
-          commit_count=20000
+          commit_count=2000
           count=0
           while [ $count -lt $commit_count ]; do
             echo "  ________.__  __     ___ ___         .__  .__   " > abyss/README.yml
@@ -68,7 +67,7 @@ jobs:
             echo " \______  /__||__|   \___|_  /  \___  >____/____/ " >> abyss/README.yml
             echo "        \/                 \/       \/            " >> abyss/README.yml
             echo "----------------------------------------------------" >> abyss/README.yml
-            echo "The abyss deepens with every commit – 11× chaos unleashed!" >> abyss/README.yml
+            echo "The abyss grows deeper with each commit." >> abyss/README.yml
             echo "----------------------------------------------------" >> abyss/README.yml
             commit_id=$(cat /proc/sys/kernel/random/uuid)
             total_commits=$(git rev-list --count HEAD)
