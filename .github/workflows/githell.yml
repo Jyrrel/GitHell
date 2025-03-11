@@ -24,6 +24,7 @@ jobs:
       - name: Ensure commits branch exists
         run: |
           if git ls-remote --exit-code --heads origin commits; then
+            git fetch origin commits:commits
             git checkout commits
           else
             git checkout -b commits
